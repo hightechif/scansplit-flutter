@@ -45,7 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) use the camera to scan a receipt</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>App needs access to photo lib for receipt images</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>To capture receipt please grant camera access</string>
 </dict>
 </plist>
