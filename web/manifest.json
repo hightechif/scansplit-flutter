@@ -1,6 +1,6 @@
 {
-    "name": "scansplit_flutter",
-    "short_name": "scansplit_flutter",
+    "name": "scansplit",
+    "short_name": "scansplit",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

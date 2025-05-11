@@ -1,4 +1,4 @@
-name: scansplit_flutter
+name: scansplit
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -30,6 +30,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get_it: ^7.6.0
+  go_router: ^12.0.0
+  shared_preferences: ^2.2.0
+  camera: ^0.10.5+3
+  image_picker: ^1.0.4
+  path_provider: ^2.1.1
+  path: ^1.8.3
+  permission_handler: ^10.4.3
+  uuid: ^3.0.7  # For
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
