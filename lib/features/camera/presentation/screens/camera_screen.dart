@@ -69,13 +69,18 @@ class _CameraScreenState extends State<CameraScreen>
 
     try {
       final imagePath = await _cameraService.takePicture();
-
       setState(() => _isCapturing = false);
 
       if (imagePath != null && widget.onImageCaptured != null) {
-        widget.onImageCaptured!(imagePath);
+        widget.onImageCaptured!(imagePath); // This will trigger navigation
       }
     } catch (e) {
+      if (mounted) {
+        // Show error to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to navigate: $e')),
+        );
+      }
       setState(() {
         _isCapturing = false;
         _errorMessage = 'Failed to capture image: ${e.toString()}';
