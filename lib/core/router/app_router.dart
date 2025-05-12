@@ -1,4 +1,6 @@
 // lib/core/router/app_router.dart
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scansplit/features/camera/presentation/screens/camera_screen.dart';
 import 'package:scansplit/features/common/presentation/home_screen.dart';
@@ -8,9 +10,10 @@ import 'package:scansplit/features/receipt/presentation/screens/receipt_detail_s
 
 class AppRouter {
   static final router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+      GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
+      GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
       GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
       GoRoute(
         path: '/camera',
@@ -27,5 +30,15 @@ class AppRouter {
       ),
     ],
     errorBuilder: (context, state) => const HomeScreen(),
+    observers: [MyRouteObserver()],
   );
+}
+
+class MyRouteObserver extends NavigatorObserver {
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    if (kDebugMode) {
+      print('Popped route: ${route.settings.name}');
+    }
+  }
 }

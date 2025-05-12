@@ -172,7 +172,7 @@ class _CameraScreenState extends State<CameraScreen>
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => context.pop(),
+              onPressed: () => back(),
             ),
           ),
 
@@ -211,7 +211,7 @@ class _CameraScreenState extends State<CameraScreen>
         title: const Text('Camera (Simulator Mode)'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: () => back(),
         ),
       ),
       body: Stack(
@@ -284,4 +284,14 @@ class _CameraScreenState extends State<CameraScreen>
       ),
     );
   }
+
+  void back() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      // Handle case where there's nothing to pop
+      context.go('/home');
+    }
+  }
+
 }

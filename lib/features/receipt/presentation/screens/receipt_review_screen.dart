@@ -102,7 +102,7 @@ class _ReceiptReviewScreenState extends State<ReceiptReviewScreen> {
         title: const Text('Review Receipt'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => context.pop(),
+          onPressed: () => back(),
         ),
       ),
       body: Form(
@@ -270,4 +270,14 @@ class _ReceiptReviewScreenState extends State<ReceiptReviewScreen> {
       ),
     );
   }
+
+  void back() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      // Handle case where there's nothing to pop
+      context.go('/home');
+    }
+  }
+
 }

@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
         child: ElevatedButton.icon(
           icon: const Icon(Icons.camera_alt),
           label: const Text('Scan a Receipt'),
-          onPressed: () => context.go('/camera'),
+          onPressed: () => context.push('/camera'),
         ),
       ),
     );
