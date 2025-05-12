@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scansplit/features/camera/services/camera_service.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -171,7 +172,7 @@ class _CameraScreenState extends State<CameraScreen>
             left: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
             ),
           ),
 
@@ -210,7 +211,7 @@ class _CameraScreenState extends State<CameraScreen>
         title: const Text('Camera (Simulator Mode)'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
       ),
       body: Stack(

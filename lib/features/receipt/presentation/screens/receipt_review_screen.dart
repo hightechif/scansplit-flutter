@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scansplit/features/receipt/domain/models/receipt.dart';
 import 'package:uuid/uuid.dart';
 
@@ -101,7 +102,7 @@ class _ReceiptReviewScreenState extends State<ReceiptReviewScreen> {
         title: const Text('Review Receipt'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
       ),
       body: Form(
