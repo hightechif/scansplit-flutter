@@ -18,6 +18,7 @@ class _CameraScreenState extends State<CameraScreen>
   bool _isLoading = true;
   bool _isCapturing = false;
   String? _errorMessage;
+  bool _isSwitchingCamera = false;
 
   @override
   void initState() {
@@ -77,9 +78,9 @@ class _CameraScreenState extends State<CameraScreen>
     } catch (e) {
       if (mounted) {
         // Show error to user
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to navigate: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to navigate: $e')));
       }
       setState(() {
         _isCapturing = false;
@@ -124,10 +125,10 @@ class _CameraScreenState extends State<CameraScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Camera preview
-          CameraPreview(_cameraService.controller!),
+          // Enhanced camera preview with loading state
+          _buildCameraPreview(),
 
-          // Camera controls
+          // Camera controls (updated switch camera button)
           Positioned(
             bottom: 0,
             left: 0,
@@ -158,14 +159,26 @@ class _CameraScreenState extends State<CameraScreen>
                     ),
                   ),
 
-                  // Switch camera button
-                  IconButton(
-                    icon: const Icon(
-                      Icons.flip_camera_ios,
-                      color: Colors.white,
-                    ),
-                    onPressed: _cameraService.switchCamera,
-                  ),
+                  // Updated switch camera button
+                  _isSwitchingCamera
+                      ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                      : IconButton(
+                        icon: const Icon(
+                          Icons.flip_camera_ios,
+                          color: Colors.white,
+                        ),
+                        onPressed: _switchCamera,
+                      ),
                 ],
               ),
             ),
@@ -290,6 +303,47 @@ class _CameraScreenState extends State<CameraScreen>
     );
   }
 
+  Widget _buildCameraPreview() {
+    if (_cameraService.isSimulator) {
+      return Container(color: Colors.black);
+    }
+
+    if (_isCapturing) {
+      return CameraPreview(_cameraService.controller!);
+    }
+
+    return FutureBuilder(
+      future: _cameraService.controller?.initialize(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return CameraPreview(_cameraService.controller!);
+        } else {
+          return Container(
+            color: Colors.black,
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> _switchCamera() async {
+    if (_isSwitchingCamera) return;
+
+    setState(() => _isSwitchingCamera = true);
+    try {
+      await _cameraService.switchCamera();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to switch camera: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSwitchingCamera = false);
+    }
+  }
+
   void back() {
     if (context.canPop()) {
       context.pop();
@@ -298,5 +352,4 @@ class _CameraScreenState extends State<CameraScreen>
       context.go('/home');
     }
   }
-
 }

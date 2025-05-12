@@ -12,6 +12,7 @@ class CameraService {
   List<CameraDescription> _cameras = [];
   bool _isInitialized = false;
   bool _isSimulator = false;
+  bool _isFrontCamera = false;
 
   bool get isInitialized => _isInitialized;
 
@@ -20,7 +21,7 @@ class CameraService {
   bool get isSimulator => _isSimulator;
 
   // Initialize camera service
-  Future<void> initialize() async {
+  Future<void> initialize({bool useFrontCamera = false}) async {
     // Check if running on simulator
     _isSimulator =
         !kIsWeb &&
@@ -47,9 +48,21 @@ class CameraService {
         throw Exception('No cameras found on device');
       }
 
+      // Find the appropriate camera
+      final camera = useFrontCamera
+          ? _cameras.firstWhere(
+            (c) => c.lensDirection == CameraLensDirection.front,
+        orElse: () => _cameras.first,
+      )
+          : _cameras.firstWhere(
+            (c) => c.lensDirection == CameraLensDirection.back,
+        orElse: () => _cameras.first,
+      );
+
       // Initialize controller with the first (back) camera
+      // await _controller?.dispose();
       _controller = CameraController(
-        _cameras[0],
+        camera,
         ResolutionPreset.high,
         enableAudio: false,
       );
@@ -57,6 +70,7 @@ class CameraService {
       // Initialize camera
       await _controller!.initialize();
       _isInitialized = true;
+      _isFrontCamera = useFrontCamera;
     } catch (e) {
       _isInitialized = false;
       rethrow;
@@ -77,9 +91,19 @@ class CameraService {
 
   // Switch between front and back cameras
   Future<void> switchCamera() async {
-    if (_isSimulator) return; // No-op on simulator
+    if (_isSimulator || _cameras.length < 2) return; // No-op on simulator
 
-    if (_cameras.length < 2) return;
+    try {
+      await initialize(useFrontCamera: !_isFrontCamera);
+    } catch (e) {
+      debugPrint('Error switching camera: $e');
+      // Fall back to back camera if front fails
+      if (_isFrontCamera) {
+        await initialize(useFrontCamera: false);
+      }
+    } finally {
+      // do something
+    }
 
     final lensDirection = _controller!.description.lensDirection;
     CameraDescription newCamera;
