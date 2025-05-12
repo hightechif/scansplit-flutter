@@ -12,6 +12,7 @@ class ScanSplitApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.light,
       routerConfig: AppRouter.router,
       builder: (context, child) {
         return GestureDetector(
